@@ -17,4 +17,6 @@ struct Order:Identifiable,Codable{
     let deliveryTime: String
     let leaveAtDoor: Bool
     let callMe: Bool
+    
+    let userPhone:String
 }

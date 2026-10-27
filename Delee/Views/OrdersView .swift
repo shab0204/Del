@@ -9,10 +9,15 @@ import SwiftUI
 
 struct OrdersView: View {
     @EnvironmentObject private var orderStore:OrderStore
+    @EnvironmentObject private var userStore:UserStore
+    var myOrders: [Order]{
+        guard let phone = userStore.currentUser?.phone else {return []}
+        return orderStore.orders.filter {$0.userPhone == phone}
+    }
     var body: some View {
         NavigationStack{
             Group{
-                if orderStore.orders.isEmpty{
+                if myOrders.isEmpty{
                     VStack(spacing: 12){
                         Image(systemName: "list.bullet.rectangle")
                             .font(.system(size: 28))
@@ -27,7 +32,7 @@ struct OrdersView: View {
         else{
         ScrollView{
     LazyVStack(spacing:12){
-                            ForEach(orderStore.orders){ order in
+                            ForEach(myOrders){ order in
                                 VStack(alignment: .leading, spacing:6){
                                     HStack{
                                         Text("Заказ №\(order.id.uuidString.prefix(6))")
@@ -70,5 +75,6 @@ struct OrdersView: View {
 #Preview {
     OrdersView()
         .environmentObject(OrderStore())
+        .environmentObject(UserStore())
        
 }

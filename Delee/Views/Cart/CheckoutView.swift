@@ -30,7 +30,8 @@ struct CheckoutView:View {
         let order = Order(
             items: cartStore.items, total: cartStore.totalPrice, date: Date(), address: selectedAddress?.value ?? "Адрес не указан", comment: comment,  deliveryTime: deliveryTime,
             leaveAtDoor: leaveAtDoor,
-            callMe: callMe
+            callMe: callMe,
+            userPhone: userStore.currentUser?.phone ?? ""
         )
         orderStore.add(order)
         cartStore.clear()

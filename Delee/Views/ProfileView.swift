@@ -10,15 +10,32 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var userStore: UserStore
     @State private var showLogin = false
+    @State private var avatarImage : UIImage?
+    @State private var showImagePicker = false
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 0) {
                     VStack(alignment: .leading,spacing: 16){
                         HStack(spacing:12){
-                            Image(systemName: "person.circle")
-                                .font(.system(size: 24))
-                            
+                            Button{
+                                showImagePicker = true
+                            }label: {
+                                if let avatarImage {
+                                    Image(uiImage: avatarImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 44, height: 44)
+                                        .clipShape(Circle())
+                                }
+                                else{
+                                    Image(systemName: "person.circle")
+                                        .font(.system(size: 36))
+                                        .foregroundStyle(.white)
+                                    
+                                }
+                            }
+                            .buttonStyle(.plain)
                             Text(userStore.currentUser?.name ?? "Гость")
                                 .font(.title3)
                                 .fontWeight(.bold)
@@ -47,7 +64,7 @@ struct ProfileView: View {
                                 .background(Color.white.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 16))
                                 NavigationLink {
-                                OrdersView()
+                                    OrdersView()
                                 } label: {
                                     VStack(alignment: .leading, spacing: 8) {
                                         Image(systemName: "doc.text")
@@ -61,7 +78,7 @@ struct ProfileView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 16))
                                 }
                                 .buttonStyle(.plain)
-                               
+                                
                                 
                             }
                             
@@ -99,7 +116,7 @@ struct ProfileView: View {
                                     
                                 }
                                 .buttonStyle(.plain)
-//                                ProfileRow(icon: "flag", title: "Филиалы", subtitle: "Список доступных филиалов")
+                                //                                ProfileRow(icon: "flag", title: "Филиалы", subtitle: "Список доступных филиалов")
                                 NavigationLink{
                                     ScheduleView()
                                 }label: {
@@ -108,7 +125,7 @@ struct ProfileView: View {
                                 .buttonStyle(.plain)
                                 
                             }
-                           
+                            
                         }
                         else{
                             Text("Другое")
@@ -121,8 +138,8 @@ struct ProfileView: View {
                             }
                             .buttonStyle(.plain)
                             
-//                            ProfileRow(icon: "bell", title: "Уведомления", subtitle: "Последние уведомления")
-//                            ProfileRow(icon: "checkmark.seal", title: "Промокоды", subtitle: "Управление промокодами")
+                            //                            ProfileRow(icon: "bell", title: "Уведомления", subtitle: "Последние уведомления")
+                            //                            ProfileRow(icon: "checkmark.seal", title: "Промокоды", subtitle: "Управление промокодами")
                             NavigationLink{
                                 FavoritesView()
                             }label: {
@@ -134,25 +151,25 @@ struct ProfileView: View {
                             }label:{
                                 ProfileRow(icon: "doc.text", title: "Мои данные", subtitle: "Изменение и добавление информации")
                             }.buttonStyle(.plain)
-//                            ProfileRow(icon: "creditcard", title: "Привязанные карты", subtitle: "Привязка и удаление карт")
-//                            ProfileRow(icon: "flag", title: "Филиалы", subtitle: "Список доступных филиалов")
+                            //                            ProfileRow(icon: "creditcard", title: "Привязанные карты", subtitle: "Привязка и удаление карт")
+                            //                            ProfileRow(icon: "flag", title: "Филиалы", subtitle: "Список доступных филиалов")
                             NavigationLink{
                                 ScheduleView()
                             }label: {
                                 ProfileRow(icon: "clock", title: "График работы", subtitle: "График работы заведения")
                             }
                             .buttonStyle(.plain)
-                          
-                                Button{
-                                    userStore.logout()
-                                }label: {
-                                    Text("Выйти")
-                                        .font(.headline)
-                                        .foregroundStyle(.red)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(16)
-                                }
-                                .buttonStyle(.plain)
+                            
+                            Button{
+                                userStore.logout()
+                            }label: {
+                                Text("Выйти")
+                                    .font(.headline)
+                                    .foregroundStyle(.red)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(16)
+                            }
+                            .buttonStyle(.plain)
                             
                         }
                     }
@@ -167,13 +184,15 @@ struct ProfileView: View {
             .background(Color.accentOrange.ignoresSafeArea(edges: .top))
             
         }
-  
+        
         .sheet(isPresented: $showLogin ){
             LoginView()
         }
+        .sheet(isPresented: $showImagePicker){
+            ImagePicker(image: $avatarImage)
+        }
     }
 }
-
 #Preview {
     ProfileView()
         .environmentObject(UserStore())

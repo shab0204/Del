@@ -84,6 +84,7 @@ struct OrderSuccesView:View {
         comment: "Позвонить за 5 минут",
         deliveryTime: "Как можно быстрее",
         leaveAtDoor: false,
-        callMe: true
-    ))    
+        callMe: true,
+        userPhone: "901092035"
+    ))
 }

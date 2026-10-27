@@ -11,7 +11,7 @@ struct UserDataViews:View {
     @EnvironmentObject var userStore:UserStore
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
-    @State private var birthDate = ""
+    @State private var birthDate = Date()
     @State private var gender = "female"
     @State private var phone = ""
     @State private var email = ""
@@ -47,11 +47,15 @@ struct UserDataViews:View {
                     .background(Color(.systemGray6))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                TextField("Дата рождения",text:$birthDate)
-                    .padding(16)
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                
+   DatePicker("Дата рождения",
+              selection:$birthDate,
+              in: ...Date(),
+              displayedComponents: .date
+              )
+   .padding(16)
+       .background(Color(.systemGray6))
+       .clipShape(RoundedRectangle(cornerRadius: 12))
+       .tint(.accentOrange)
                 HStack(spacing:12){
                     RadioButton(title: "Женщина", isSelected: gender == "female"){
                         gender = "female"
@@ -146,6 +150,10 @@ struct UserDataViews:View {
                 wantsEmail = user.wantsSMS
                 
             }
+        }
+        .onTapGesture {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+            to: nil, from: nil, for: nil)
         }
     }
 }

@@ -54,7 +54,7 @@ class UserStore : ObservableObject {
     
     func updateProfile(
         name: String,
-        birthDate: String,
+        birthDate: Date,
         gender: String,
         phone: String,
         email: String,
@@ -65,7 +65,7 @@ class UserStore : ObservableObject {
             name: name,
             phone: phone,
             email: email,
-            birthDate: nil,
+            birthDate: birthDate,
             gender: gender,
             wantsSMS: wantsSMS,
             wantsEmail: wantsEmail,
