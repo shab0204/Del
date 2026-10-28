@@ -9,10 +9,12 @@ import Foundation
 import Combine
 
 class FavoritesStore:ObservableObject{
+    private var currentPhone:String?
     private var fileURL: URL{
-        FileManager.default
+        let name = currentPhone ?? "Гость"
+       return FileManager.default
             .urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("favorites.json")
+            .appendingPathComponent("favorites_\(name).json")
     }
     private func save(){
         do{
@@ -55,5 +57,9 @@ class FavoritesStore:ObservableObject{
     func clear(){
         favoritIds.removeAll()
         save()
+    }
+    func switchUser(phone:String?){
+        currentPhone = phone
+        load()
     }
 }

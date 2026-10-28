@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 class UserStore : ObservableObject {
     @Published var currentUser: UserInfo?
@@ -26,6 +27,29 @@ class UserStore : ObservableObject {
         FileManager.default
             .urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("user.json")
+    }
+    private func avatarURL( for phone:String) -> URL{
+        FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("avatar_\(phone).jpg")
+    }
+    func saveAvatar(_ image:UIImage){
+        guard let phone = currentUser?.phone else {return}
+        guard let data = image.jpegData(compressionQuality: 0.8) else {return}
+        
+        do {
+            try data.write(to: avatarURL(for: phone))
+            print("Сохранен")
+        }
+        catch{
+            print("ОШИБКА СОХРАНЕНИЯ АВАТАРА:", error)
+        }
+    }
+    
+    func loadAvatar() -> UIImage?{
+        guard let phone = currentUser?.phone else {return nil}
+        guard let data = try? Data(contentsOf: avatarURL(for: phone)) else { return nil}
+        return UIImage(data: data)
     }
     private func save(){
         do{

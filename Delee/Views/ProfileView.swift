@@ -191,6 +191,18 @@ struct ProfileView: View {
         .sheet(isPresented: $showImagePicker){
             ImagePicker(image: $avatarImage)
         }
+        .onChange(of: avatarImage){
+            _,newValue in
+            guard let newValue else {return}
+            userStore.saveAvatar(newValue)
+        }
+        .onAppear{
+            avatarImage = userStore.loadAvatar()
+        }
+        .onChange(of: userStore.currentUser?.phone){_,_ in
+            avatarImage = userStore.loadAvatar()
+            
+        }
     }
 }
 #Preview {

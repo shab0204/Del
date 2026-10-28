@@ -10,6 +10,8 @@ import SwiftUI
 struct MainTabView: View {
     @EnvironmentObject var cartStore:CartStore
     @EnvironmentObject var dishStore:DishStore
+    @EnvironmentObject var userStore:UserStore
+    @EnvironmentObject var favoritesStore:FavoritesStore
 
     var body:some View {
         
@@ -49,6 +51,13 @@ struct MainTabView: View {
                     Text("Корзина")
                 }
                 .badge(cartStore.totalCount)
+        }
+        .onAppear{
+            favoritesStore.switchUser(phone: userStore.currentUser?.phone)
+        }
+        .onChange(of: userStore.currentUser?.phone){
+            _,newPhone in
+            favoritesStore.switchUser(phone: newPhone)
         }
     }
 }
